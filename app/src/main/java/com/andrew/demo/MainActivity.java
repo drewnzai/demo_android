@@ -56,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         apiService = new Retrofit.Builder()
                 .baseUrl("https://dummyjson.com/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -63,18 +66,15 @@ public class MainActivity extends AppCompatActivity {
                 .create(ApiService.class);
 
         adapter = new PostsAdapter(new ArrayList<>());
-        binding.postsRecyclerView.setAdapter(adapter);
+        db = AppRoom.getInstance(getApplicationContext());
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
         setSupportActionBar(binding.mainToolbar);
 
         String username = AppStore.getPref(getApplicationContext(), "username");
         binding.mainUsername.setText("Welcome, " + username);
 
-        db = AppRoom.getInstance(getApplicationContext());
-
         binding.postsRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        binding.postsRecyclerView.setAdapter(adapter);
         binding.swipeRefreshLayout.setOnRefreshListener(this::fetchPosts);
 
         fetchPosts();
@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
                         db.postDao().insertAll(posts);
                     });
 
-                    // Update UI on the main thread
                     updateUIWithPosts(posts);
                 } else {
                     handleFetchFailure("Failed to load posts");
