@@ -1,7 +1,12 @@
 package com.andrew.demo.models;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "posts")
 public class Post {
-    
+
+    @PrimaryKey(autoGenerate = true)
     private Integer userId;
     private Integer id;
     private String title;

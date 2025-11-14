@@ -18,10 +18,18 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PostViewHold
         this.posts = posts;
     }
 
+    // Call this to refresh data without recreating the adapter
+    public void updateData(List<Post> newPosts) {
+        this.posts.clear();
+        this.posts.addAll(newPosts);
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public PostViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_post, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_post, parent, false);
         return new PostViewHolder(view);
     }
 
