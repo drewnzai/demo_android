@@ -79,7 +79,10 @@ public class LoginActivity extends AppCompatActivity {
                         Log.e("Login", "Failed to login: " + response.code());
                         binding.username.setText("");
                         binding.password.setText("");
-                        Snackbar.make(binding.getRoot(), "Failed to login: Invalid credentials", Snackbar.LENGTH_LONG).show();
+
+                        Snackbar snackbar = Snackbar.make(binding.getRoot(), "Failed to login: Invalid credentials", Snackbar.LENGTH_LONG);
+                        snackbar.setAnchorView(binding.buttonLogin);
+                        snackbar.show();
                     }
                 }
 
@@ -87,7 +90,10 @@ public class LoginActivity extends AppCompatActivity {
                 public void onFailure(Call<User> call, Throwable t) {
                     binding.username.setText("");
                     binding.password.setText("");
-                    Snackbar.make(binding.getRoot(), "Failed to login: " + t.getMessage(), Snackbar.LENGTH_LONG).show();
+
+                    Snackbar snackbar = Snackbar.make(binding.getRoot(), "Failed to login: " + t.getMessage(), Snackbar.LENGTH_LONG);
+                    snackbar.setAnchorView(binding.buttonLogin);
+                    snackbar.show();
                 }
             });
         });
