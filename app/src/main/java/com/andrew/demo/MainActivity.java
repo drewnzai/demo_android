@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding.postsRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         binding.postsRecyclerView.setAdapter(adapter);
-        binding.swipeRefreshLayout.setOnRefreshListener(this::fetchPosts);
+        binding.swipeRefreshLayout.setOnRefreshListener(this::refreshFetch);
 
         fetchPosts();
     }
@@ -90,10 +90,26 @@ public class MainActivity extends AppCompatActivity {
 
             if (postCount > 0 && !binding.swipeRefreshLayout.isRefreshing()) {
                 List<Post> posts = db.postDao().getAllPosts();
-                mainHandler.post(() -> updateUIWithPosts(posts));
+                mainHandler.postDelayed(() -> updateUIWithPosts(posts), 1500);;
             } else {
                 fetchFromApi();
             }
+        });
+    }
+
+    private void refreshFetch() {
+
+        binding.progressBar.setVisibility(View.VISIBLE);
+
+        adapter.clearData();
+
+        executor.execute(() -> {
+
+            db.postDao().deleteAll();
+
+            try { Thread.sleep(1200); } catch (InterruptedException e) { }
+
+            fetchFromApi();
         });
     }
 
@@ -128,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
             binding.swipeRefreshLayout.setRefreshing(false);
         }
         adapter.updateData(posts);
-        binding.postsRecyclerView.setAdapter(adapter);
     }
 
     private void handleFetchFailure(String message) {

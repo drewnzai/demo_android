@@ -33,4 +33,7 @@ public interface PostDao {
 
     @Query("SELECT COUNT(*) FROM posts")
     int getPostCount();
+
+    @Query("DELETE FROM posts")
+    void deleteAll();
 }
